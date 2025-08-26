@@ -1,6 +1,7 @@
 package com.ofss.bankapp.services;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,6 +13,7 @@ import com.ofss.bankapp.component.TimeProvider;
 import com.ofss.bankapp.dao.AccountRepository;
 import com.ofss.bankapp.dao.BillPaymentRepository;
 import com.ofss.bankapp.dao.TransactionRepository;
+import com.ofss.bankapp.exception.NotFoundException;
 
 @Service
 public class TransactionService {
@@ -34,6 +36,7 @@ public class TransactionService {
     this.clock = clock;
   }
 
+  // 🔹 Create a transaction (credit/debit)
   @Transactional
   public TxnTransaction createTransaction(Long accountId, TxnTransaction tx) {
     Account a = accountService.get(accountId);
@@ -62,6 +65,7 @@ public class TransactionService {
     return txRepo.save(tx);
   }
 
+  // 🔹 Bill payment
   @Transactional
   public BillPayment payBill(Long accountId, BillPayment bill, BigDecimal amount) {
     TxnTransaction tx = new TxnTransaction();
@@ -75,7 +79,28 @@ public class TransactionService {
     return billRepo.save(bill);
   }
 
+  // 🔹 Get transaction by ID
   public TxnTransaction get(Long id) {
-    return txRepo.findById(id).orElseThrow();
+    return txRepo.findById(id).orElseThrow(() -> new NotFoundException("Transaction not found: " + id));
+  }
+
+  // 🔹 Get all transactions
+  public List<TxnTransaction> getAll() {
+    return txRepo.findAll();
+  }
+
+  // 🔹 Get all transactions for a specific account
+  public List<TxnTransaction> getByAccount(Long accountId) {
+    return txRepo.findAll().stream()
+        .filter(tx -> tx.getAccount().getAccountId().equals(accountId))
+        .toList();
+  }
+
+  // 🔹 Delete a transaction
+  public void delete(Long id) {
+    if (!txRepo.existsById(id)) {
+      throw new NotFoundException("Transaction not found with id: " + id);
+    }
+    txRepo.deleteById(id);
   }
 }
