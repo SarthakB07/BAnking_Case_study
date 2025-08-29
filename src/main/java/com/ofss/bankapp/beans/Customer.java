@@ -15,6 +15,9 @@ public class Customer {
   @Column(name = "CUSTOMER_ID")
   private Long customerId;
 
+  @Column(name = "customer_number", unique = true, length = 32)
+  private String customerNumber; 
+  
   @NotBlank
   @Column(name = "FIRST_NAME")
   private String firstName;
@@ -105,4 +108,6 @@ public class Customer {
   public void setCreatedAt(OffsetDateTime createdAt) { this.createdAt = createdAt; }
   public OffsetDateTime getUpdatedAt() { return updatedAt; }
   public void setUpdatedAt(OffsetDateTime updatedAt) { this.updatedAt = updatedAt; }
+  public String getCustomerNumber() { return customerNumber; }
+  public void setCustomerNumber(String customerNumber) { this.customerNumber = customerNumber; }
 }

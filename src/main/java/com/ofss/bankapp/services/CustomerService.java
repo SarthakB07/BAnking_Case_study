@@ -37,10 +37,14 @@ public class CustomerService {
   }
 
   public Customer register(Customer c) {
-    c.setCreatedAt(clock.now());
-    if (c.getKycStatus() == null) c.setKycStatus("PENDING");
-    return customerRepo.save(c);
-  }
+	    if (c.getCustomerNumber() == null || c.getCustomerNumber().isBlank()) {
+	        Long next = customerRepo.nextCustomerSeq();
+	        c.setCustomerNumber("CUST" + next);
+	    }
+	    c.setCreatedAt(clock.now());
+	    if (c.getKycStatus() == null) c.setKycStatus("PENDING");
+	    return customerRepo.save(c);
+	}
 
   public Customer get(Long id) {
     return customerRepo.findById(id)
@@ -55,12 +59,26 @@ public class CustomerService {
     c.setAddressLine1(upd.getAddressLine1());
     c.setAddressLine2(upd.getAddressLine2());
     c.setCity(upd.getCity());
+    c.setEmail(upd.getEmail());
     c.setState(upd.getState());
     c.setPostalCode(upd.getPostalCode());
     c.setCountry(upd.getCountry());
     c.setUpdatedAt(clock.now());
     return customerRepo.save(c);
   }
+  
+  public Customer login(String email, String passwordHash) {
+	    Customer c = customerRepo.findAll().stream()
+	            .filter(x -> x.getEmail().equalsIgnoreCase(email) 
+	                      && x.getPasswordHash().equals(passwordHash))
+	            .findFirst()
+	            .orElseThrow(() -> new NotFoundException("Invalid email or password"));
+  
+	 // record login
+	    recordLogin(c.getCustomerId(), null, null);
+
+	    return c;
+	}
 
   public void recordLogin(Long customerId, String ip, String device) {
     CustomerLoginHistory h = new CustomerLoginHistory();
@@ -123,8 +141,6 @@ public class CustomerService {
 	    t.setUpdatedAt(clock.now());
 	    return ticketRepo.save(t);
 	}
-
-
 
 
 }

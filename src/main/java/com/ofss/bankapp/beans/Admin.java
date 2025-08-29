@@ -11,6 +11,9 @@ public class Admin {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "ADMIN_ID")
   private Long adminId;
+  
+  @Column(name = "ADMIN_NUMBER", unique = true, length = 32)
+  private String adminNumber;
 
   @Column(name = "USERNAME", unique = true)
   private String username;
@@ -61,4 +64,7 @@ public class Admin {
   public void setCreatedAt(OffsetDateTime createdAt) { this.createdAt = createdAt; }
   public OffsetDateTime getLastLogin() { return lastLogin; }
   public void setLastLogin(OffsetDateTime lastLogin) { this.lastLogin = lastLogin; }
+  public String getAdminNumber() { return adminNumber; }
+  public void setAdminNumber(String adminNumber) { this.adminNumber = adminNumber; }
+
 }

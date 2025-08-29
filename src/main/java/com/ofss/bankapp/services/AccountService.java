@@ -17,9 +17,14 @@ import com.ofss.bankapp.dao.AccountRepository;
 import com.ofss.bankapp.dao.AccountStatementRepository;
 import com.ofss.bankapp.dao.AccountTypeRepository;
 import com.ofss.bankapp.exception.NotFoundException;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+
 
 @Service
 public class AccountService {
+	@PersistenceContext
+	private EntityManager entityManager;
 
   private final AccountRepository accountRepo;
   private final AccountTypeRepository typeRepo;
@@ -51,6 +56,14 @@ public class AccountService {
     a.setOpenedAt(clock.now());
     if (a.getBalance() == null) a.setBalance(BigDecimal.ZERO);
     if (a.getStatus() == null) a.setStatus("ACTIVE");
+    
+ // 🔹 Generate account number from sequence
+    Long nextVal = ((Number) entityManager
+            .createNativeQuery("SELECT accsequence.NEXTVAL FROM dual")
+            .getSingleResult())
+            .longValue();
+    a.setAccountNumber("ACC" + nextVal);
+    
     return accountRepo.save(a);
   }
 

@@ -15,6 +15,9 @@ public class BillPayment {
   @OneToOne
   @JoinColumn(name = "TRANSACTION_ID")
   private TxnTransaction transaction;
+  
+  @Column(name = "BILL_NUMBER", unique = true)
+  private String billNumber;
 
   @Column(name = "BILLER_NAME")
   private String billerName;
@@ -42,4 +45,6 @@ public class BillPayment {
   public void setDueDate(LocalDate dueDate) { this.dueDate = dueDate; }
   public String getStatus() { return status; }
   public void setStatus(String status) { this.status = status; }
+  public String getBillNumber() { return billNumber; }
+  public void setBillNumber(String billNumber) { this.billNumber = billNumber; }
 }

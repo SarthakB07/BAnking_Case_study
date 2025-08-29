@@ -22,9 +22,18 @@ public class BillPaymentService {
 
   // Pay a bill (delegates to TransactionService)
   public BillPayment pay(Long accountId, BillPayment bill, BigDecimal amount) {
-    BillPayment savedBill = transactionService.payBill(accountId, bill, amount);
-    return billRepo.save(savedBill);
-  }
+	    // Generate bill number if not already set
+	    if (bill.getBillNumber() == null || bill.getBillNumber().isBlank()) {
+	        Long next = billRepo.nextBillSeq();   // custom query in repository
+	        bill.setBillNumber("BILL" + next);
+	    }
+
+	    // Delegate to TransactionService
+	    BillPayment savedBill = transactionService.payBill(accountId, bill, amount);
+
+	    // Save to DB
+	    return billRepo.save(savedBill);
+	}
 
   // Get all bill payments
   public List<BillPayment> getAll() {

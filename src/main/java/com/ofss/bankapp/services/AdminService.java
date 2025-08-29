@@ -86,6 +86,10 @@ public class AdminService {
     return closureRepo.save(r);
   }
   public Admin createAdmin(Admin a) {
+	    if (a.getAdminNumber() == null || a.getAdminNumber().isBlank()) {
+	        Long next = adminRepo.nextAdminSeq();
+	        a.setAdminNumber("ADM" + next);
+	    }
 	    a.setCreatedAt(clock.now());
 	    if (a.getStatus() == null) a.setStatus("ACTIVE");
 	    return adminRepo.save(a);

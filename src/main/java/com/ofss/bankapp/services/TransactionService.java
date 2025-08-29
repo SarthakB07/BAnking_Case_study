@@ -40,6 +40,14 @@ public class TransactionService {
   @Transactional
   public TxnTransaction createTransaction(Long accountId, TxnTransaction tx) {
     Account a = accountService.get(accountId);
+    
+ // Assign transaction number
+    if (tx.getTransactionNumber() == null || tx.getTransactionNumber().isBlank()) {
+        Long next = txRepo.nextTxnSeq();
+        tx.setTransactionNumber("TXN" + next);
+    }
+    
+    
     tx.setAccount(a);
     tx.setInitiatedAt(clock.now());
     tx.setStatus("PENDING");

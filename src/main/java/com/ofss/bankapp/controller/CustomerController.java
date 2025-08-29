@@ -53,11 +53,10 @@ public class CustomerController {
 		return "Customer with ID " + id + " deleted successfully.";
 	}
 
-	@PostMapping("/{id}/login")
+	@PostMapping("/login")
 	@ResponseBody
-	public void recordLogin(@PathVariable Long id, @RequestParam(required = false) String ip,
-			@RequestParam(required = false) String device) {
-		service.recordLogin(id, ip, device);
+	public Customer login(@RequestParam String email, @RequestParam String passwordHash) {
+	    return service.login(email, passwordHash);
 	}
 
 	@PostMapping("/{id}/documents")

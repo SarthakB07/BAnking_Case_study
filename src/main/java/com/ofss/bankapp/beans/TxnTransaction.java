@@ -12,6 +12,9 @@ public class TxnTransaction {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "TRANSACTION_ID")
   private Long transactionId;
+  
+  @Column(name = "TRANSACTION_NUMBER", unique = true)
+  private String transactionNumber;
 
   @ManyToOne
   @JoinColumn(name = "ACCOUNT_ID")
@@ -58,4 +61,6 @@ public class TxnTransaction {
   public void setInitiatedAt(OffsetDateTime initiatedAt) { this.initiatedAt = initiatedAt; }
   public OffsetDateTime getCompletedAt() { return completedAt; }
   public void setCompletedAt(OffsetDateTime completedAt) { this.completedAt = completedAt; }
+  public String getTransactionNumber() { return transactionNumber; }
+  public void setTransactionNumber(String transactionNumber) { this.transactionNumber = transactionNumber; }
 }
