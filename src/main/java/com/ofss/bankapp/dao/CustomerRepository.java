@@ -9,9 +9,10 @@ import java.util.Optional;
 @Repository
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
   boolean existsByEmail(String email);
-  Customer findByEmail(String email);
+  Optional<Customer> findByEmail(String email);
   @Query(value = "SELECT custsequence.NEXTVAL FROM dual", nativeQuery = true)
   Long nextCustomerSeq();
 
+  
   Optional<Customer> findByCustomerNumber(String customerNumber);
 }

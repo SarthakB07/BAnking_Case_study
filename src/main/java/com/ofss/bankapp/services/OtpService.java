@@ -39,7 +39,7 @@ public class OtpService {
 
         OtpVerification saved = otpRepo.save(otp);
 
-        // ✅ Send OTP via Email
+        // Send OTP via Email
         emailService.sendOtp(customer.getEmail(), otpCode, purpose);
 
         return saved;

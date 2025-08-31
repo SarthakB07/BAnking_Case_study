@@ -22,6 +22,7 @@ public class CustomerDocument {
   @Column(name = "DOCUMENT_NUMBER")
   private String documentNumber;
 
+  // relative path w.r.t base storage dir
   @Column(name = "DOCUMENT_PATH")
   private String documentPath;
 
@@ -31,8 +32,19 @@ public class CustomerDocument {
   @Column(name = "VERIFIED_STATUS")
   private String verifiedStatus;
 
+  // metadata
+  @Column(name = "ORIGINAL_FILE_NAME")
+  private String originalFileName;
+
+  @Column(name = "CONTENT_TYPE")
+  private String contentType;
+
+  @Column(name = "FILE_SIZE")
+  private Long fileSize;
+
   public CustomerDocument() {}
 
+  // --- getters/setters ---
   public Long getDocumentId() { return documentId; }
   public void setDocumentId(Long documentId) { this.documentId = documentId; }
   public Customer getCustomer() { return customer; }
@@ -47,4 +59,10 @@ public class CustomerDocument {
   public void setUploadedAt(OffsetDateTime uploadedAt) { this.uploadedAt = uploadedAt; }
   public String getVerifiedStatus() { return verifiedStatus; }
   public void setVerifiedStatus(String verifiedStatus) { this.verifiedStatus = verifiedStatus; }
+  public String getOriginalFileName() { return originalFileName; }
+  public void setOriginalFileName(String originalFileName) { this.originalFileName = originalFileName; }
+  public String getContentType() { return contentType; }
+  public void setContentType(String contentType) { this.contentType = contentType; }
+  public Long getFileSize() { return fileSize; }
+  public void setFileSize(Long fileSize) { this.fileSize = fileSize; }
 }

@@ -18,6 +18,12 @@ public class CustomerLoginHistory {
 
   @Column(name = "LOGIN_TIME")
   private OffsetDateTime loginTime;
+  
+  @Column(name = "STATUS")
+  private String status;
+
+  public String getStatus() { return status; }
+  public void setStatus(String status) { this.status = status; }
 
   @Column(name = "IP_ADDRESS")
   private String ipAddress;

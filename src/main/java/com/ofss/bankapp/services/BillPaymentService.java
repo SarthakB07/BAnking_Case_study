@@ -22,31 +22,24 @@ public class BillPaymentService {
 
   // Pay a bill (delegates to TransactionService)
   public BillPayment pay(Long accountId, BillPayment bill, BigDecimal amount) {
-	    // Generate bill number if not already set
-	    if (bill.getBillNumber() == null || bill.getBillNumber().isBlank()) {
-	        Long next = billRepo.nextBillSeq();   // custom query in repository
-	        bill.setBillNumber("BILL" + next);
-	    }
+      if (bill.getBillNumber() == null || bill.getBillNumber().isBlank()) {
+          Long next = billRepo.nextBillSeq();   // custom query in repository
+          bill.setBillNumber("BILL" + next);
+      }
 
-	    // Delegate to TransactionService
-	    BillPayment savedBill = transactionService.payBill(accountId, bill, amount);
+      // TransactionService will handle OTP if needed
+      return transactionService.payBill(accountId, bill, amount);
+  }
 
-	    // Save to DB
-	    return billRepo.save(savedBill);
-	}
-
-  // Get all bill payments
   public List<BillPayment> getAll() {
     return billRepo.findAll();
   }
 
-  // Get bill by ID
   public BillPayment getById(Long id) {
     return billRepo.findById(id)
         .orElseThrow(() -> new NotFoundException("Bill payment not found: " + id));
   }
 
-  // Get bills for a specific account
   public List<BillPayment> getByAccount(Long accountId) {
     return billRepo.findAll().stream()
         .filter(b -> b.getTransaction().getAccount().getAccountId().equals(accountId))
