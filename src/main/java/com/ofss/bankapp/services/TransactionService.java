@@ -74,14 +74,16 @@ public class TransactionService {
         TxnTransaction tx = txRepo.findById(txnId)
                 .orElseThrow(() -> new NotFoundException("Transaction not found: " + txnId));
 
+        if (!"PENDING_OTP".equals(tx.getStatus())) {
+            throw new IllegalStateException("Transaction is not awaiting OTP verification");
+        }	
+        
         Account a = tx.getAccount();
         return processTransaction(a, tx);
     }
 
     // 🔹 Internal transaction logic
     private TxnTransaction processTransaction(Account a, TxnTransaction tx) {
-        tx.setStatus("PENDING");
-
         if ("DEBIT".equalsIgnoreCase(tx.getTransactionType())) {
             if (a.getBalance() == null) a.setBalance(BigDecimal.ZERO);
             if (a.getBalance().compareTo(tx.getAmount()) < 0) {
@@ -102,6 +104,7 @@ public class TransactionService {
         tx.setCompletedAt(clock.now());
         return txRepo.save(tx);
     }
+
 
     // 🔹 Bill payment
     @Transactional

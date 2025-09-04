@@ -110,4 +110,8 @@ public class Customer {
   public void setUpdatedAt(OffsetDateTime updatedAt) { this.updatedAt = updatedAt; }
   public String getCustomerNumber() { return customerNumber; }
   public void setCustomerNumber(String customerNumber) { this.customerNumber = customerNumber; }
+
+  public Long getId() {
+	    return this.customerId;
+	}
 }

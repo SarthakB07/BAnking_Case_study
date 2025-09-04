@@ -4,9 +4,12 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -63,13 +66,20 @@ public class CustomerController {
 
     @PostMapping("/login")
     @ResponseBody
-    public String login(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
         Customer customer = service.findByEmail(loginRequest.getEmail());
 
         if (customer != null && customer.getPasswordHash().equals(loginRequest.getPasswordHash())) {
-            return "✅ Login successful for " + customer.getFirstName();
+            // Create a response object with customer details
+            Map<String, Object> response = new HashMap<>();
+            response.put("customerId", customer.getId());
+            response.put("email", customer.getEmail());
+            response.put("firstName", customer.getFirstName());
+            // Add other fields if needed (e.g., token)
+            return ResponseEntity.ok(response);
         }
-        return "❌ Invalid email or password";
+        // Return error message with 401 status
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("❌ Invalid email or password");
     }
 
     // -----------------------
