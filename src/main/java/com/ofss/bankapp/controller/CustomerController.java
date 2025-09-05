@@ -140,6 +140,27 @@ public class CustomerController {
     public List<CustomerSupportTicket> getAllTickets(@PathVariable Long id) {
         return service.getAllTickets(id);
     }
+    
+    @GetMapping("/tickets")
+    @ResponseBody
+    public List<CustomerSupportTicket> getAllTicketsForAdmin() {
+        return service.getAllTicketsForAdmin();
+    }
+    
+    @PutMapping("/tickets/{ticketId}")
+    @ResponseBody
+    public CustomerSupportTicket updateAnyTicketStatus(
+            @PathVariable Long ticketId,
+            @RequestParam String status) {
+
+        return service.updateAnyTicketStatus(ticketId, status);
+    }
+    
+    @GetMapping("/documents")
+    @ResponseBody
+    public List<CustomerDocument> getAllDocumentsForAdmin() {
+        return service.getAllDocumentsForAdmin();
+    }
 
     @PutMapping("/{customerId}/tickets/{ticketId}")
     @ResponseBody

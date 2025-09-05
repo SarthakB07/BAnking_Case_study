@@ -213,8 +213,23 @@ public class CustomerService {
     return ticketRepo.save(t);
   }
 
+  public List<CustomerSupportTicket> getAllTicketsForAdmin() {
+	    return ticketRepo.findAll();
+	}
+  
   public Customer findByEmail(String email) {
     return customerRepo.findByEmail(email)
         .orElseThrow(() -> new NotFoundException("Customer not found with email: " + email));
   }
+  public CustomerSupportTicket updateAnyTicketStatus(Long ticketId, String status) {
+	    CustomerSupportTicket t = ticketRepo.findById(ticketId)
+	        .orElseThrow(() -> new NotFoundException("Ticket not found: " + ticketId));
+
+	    t.setStatus(status.toUpperCase());
+	    t.setUpdatedAt(clock.now());
+	    return ticketRepo.save(t);
+	}
+  public List<CustomerDocument> getAllDocumentsForAdmin() {
+	    return docRepo.findAll(); // return every document regardless of customer
+	}
 }
