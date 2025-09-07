@@ -73,7 +73,7 @@ public class Customer {
 
   public Customer() {}
 
-  // Getters and setters
+  // Getters and setters contains about customer 
   public Long getCustomerId() { return customerId; }
   public void setCustomerId(Long customerId) { this.customerId = customerId; }
   public String getFirstName() { return firstName; }
